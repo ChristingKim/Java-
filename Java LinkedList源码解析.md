@@ -155,3 +155,114 @@ LinkedList 继承 AbstractSequentialList，实现 List、Deque、Cloneable、Ser
         	size++;
         	modCount++;
     	}
++ unlinkFirst(Node<E> f)
+        
+		//从双向链表中删除第一个节点，f为第一个节点
+		private E unlinkFirst(Node<E> f) {
+        	// assert f == first && f != null;
+        	final E element = f.item;
+       	 	final Node<E> next = f.next;
+        	f.item = null;
+        	f.next = null; // help GC
+        	first = next;
+        	if (next == null)
+            	last = null;
+        	else
+            	next.prev = null;
+        	size--;
+        	modCount++;
+        	return element;
+    	}
++ unlinkLast(Node<E> l)
+ 
+        //从双向链表中删除最后一个节点，l是最后一个节点
+		private E unlinkLast(Node<E> l) {
+        	// assert l == last && l != null;
+        	final E element = l.item;
+        	final Node<E> prev = l.prev;
+        	l.item = null;
+        	l.prev = null; // help GC
+        	last = prev;
+        	if (prev == null)
+        	    first = null;
+        	else
+        	    prev.next = null;
+        	size--;
+        	modCount++;
+        	return element;
+    	}
++ unlink(Node<E> x)
+        
+		//在双向链表中，移除某一个节点
+		E unlink(Node<E> x) {
+        	// assert x != null;
+        	final E element = x.item;
+        	final Node<E> next = x.next;
+        	final Node<E> prev = x.prev;
+	
+        	if (prev == null) {
+        	    first = next;
+        	} else {
+        	    prev.next = next;
+        	    x.prev = null;
+        	}
+
+        	if (next == null) {
+        	    last = prev;
+        	} else {
+        	    next.prev = prev;
+        	    x.next = null;
+        	}
+
+        	x.item = null;
+        	size--;
+        	modCount++;
+        	return element;
+    	}
++ addAll(Collection<? extends E> c)
+        
+		//将集合对象c中的元素，添加到双向链表的尾部
+		public boolean addAll(Collection<? extends E> c) {
+        	return addAll(size, c);
+    	}
++ addAll(int index, Collection<? extends E> c)
+        
+		//将集合对象c中的元素，添加到双向链表索引index节点之后
+		public boolean addAll(int index, Collection<? extends E> c) {
+        	checkPositionIndex(index);
+
+        	Object[] a = c.toArray();
+        	int numNew = a.length;
+        	if (numNew == 0)
+        	    return false;
+
+        	Node<E> pred, succ;
+        	if (index == size) {
+        	    succ = null;
+        	    pred = last;
+        	} else {
+        	    succ = node(index);
+        	    pred = succ.prev;
+        	}
+
+        	for (Object o : a) {
+        	    @SuppressWarnings("unchecked") E e = (E) o;
+        	    Node<E> newNode = new Node<>(pred, e, null);
+        	    if (pred == null)
+        	        first = newNode;
+        	    else
+        	        pred.next = newNode;
+        	    pred = newNode;
+        	}
+
+        	if (succ == null) {
+        	    last = pred;
+        	} else {
+        	    pred.next = succ;
+        	    succ.prev = pred;
+        	}
+
+        	size += numNew;
+        	modCount++;
+        	return true;
+    	}
