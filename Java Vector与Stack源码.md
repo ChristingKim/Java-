@@ -19,3 +19,9 @@ Stack类实现的就是我们非常常用的一种数据结构栈。栈是一种
 3. 获取栈顶元素peek()
 	
 	返回栈顶的元素值，即数组尾部的最后一个有效元素的值。
+
+###Collections.synchronizedList
+
+Vector、Stack与ArrayList的最大区别就是Vector和Stack是现成安全的。JDK提供了一个方法Collections.synchronizedList()将List类包装成线程安全的。如下代码所示：
+
+	private static List<String> TEST_LIST = Collections.synchronizedList(new ArrayList<String>());
